@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ProductList from "./components/ProductList";
+import Cart from "./components/Cart";
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -14,11 +15,16 @@ function App() {
     setCart((prev) => [...prev, product]);
   };
 
+  const removeFromCart = (index) => {
+    setCart((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <>
       <h1>Mini Store</h1>
       <h2>Cart: {cart.length}</h2>
       <ProductList products={products} addToCart={addToCart} />
+      <Cart cart={cart} removeFromCart={removeFromCart} />
     </>
   );
 }
