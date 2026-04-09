@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
 
 function App() {
   const [cart, setCart] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = [
-    { id: 1, title: "iPhone", price: 1000 },
-    { id: 2, title: "Laptop", price: 2000 },
-    { id: 3, title: "Watch", price: 500 }
-  ];
+  useEffect(() => {
+    fetch("https://dummyjson.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data.products);
+        setLoading(false);
+      });
+  }, []);
 
   const addToCart = (product) => {
     setCart((prev) => [...prev, product]);
@@ -23,7 +28,11 @@ function App() {
     <>
       <h1>Mini Store</h1>
       <h2>Cart: {cart.length}</h2>
-      <ProductList products={products} addToCart={addToCart} />
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ProductList products={products} addToCart={addToCart} />
+      )}
       <Cart cart={cart} removeFromCart={removeFromCart} />
     </>
   );
